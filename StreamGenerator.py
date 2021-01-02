@@ -3,7 +3,7 @@
 
 # In[1]:
 
-
+import sys
 import rstr
 import string
 import random
@@ -61,6 +61,7 @@ def augment_match(m, max_aug=10):
 
 # print debug info
 verbose = True
+'''
 # regular exrpession
 # pattern='ab*c'
 pattern = 'ab{0,4}c'
@@ -70,7 +71,19 @@ stream_length = 10;
 # number of matches to generate
 num_matches = 1;
 strict = False;  # if false then it will pad generated matches with random characters
+output_file = 'seq.txt'
+'''
 
+# arguments: 1 = pattern, 2 = stream_length, 3 = num_matches, 4 = strict, 5 = output_file
+print ('Number: ', len(sys.argv))
+print ('Argument list: ', str(sys.argv))
+#'''
+pattern = sys.argv[1]
+stream_length = int(sys.argv[2])
+num_matches = int(sys.argv[3])
+strict = sys.argv[4] == 'True'
+output_file = sys.argv[5] # seq.txt
+#'''
 # initialize a random stream
 stream = randomstream_generator(size=stream_length)
 if verbose:
@@ -89,7 +102,7 @@ for i in range(num_matches):
 
 generated_stream = inject_many(stream, matches)
 print(generated_stream)
-f = open("seq.txt", "w")
+f = open(output_file, "w")
 f.write(generated_stream)
 f.close()
 # for event in generated_stream:
