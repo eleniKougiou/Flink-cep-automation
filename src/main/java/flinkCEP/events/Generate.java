@@ -170,6 +170,11 @@ public class Generate implements Serializable{
                 }
             }else if (cur == '?'){ // ? (optional)
                 resultP = resultP.optional();
+            }else if(cur == '{') { // {low,high} (we want previous character from low to high times)
+                int low = Character.getNumericValue(strP.charAt(i + 1));
+                int high = Character.getNumericValue(strP.charAt(i + 3));
+                resultP = resultP.times(low, high);
+                i += 4; // go to }
             }
         }
         return resultP;
@@ -258,7 +263,7 @@ public class Generate implements Serializable{
     }
 
     public static DataStream<String> createResult(PatternStream<Event> patternStream){
-        return patternStream.select((Map<String, List<Event>> p) -> {
+        DataStream<String> result =  patternStream.select((Map<String, List<Event>> p) -> {
             String strResult = "";
 
             int test = getN();
@@ -274,7 +279,7 @@ public class Generate implements Serializable{
             }
             return nr + ". " + strResult;
         });
-
+        return result;
     }
 
     @Override

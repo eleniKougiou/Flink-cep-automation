@@ -32,6 +32,7 @@ import flinkCEP.events.Generate;
 public class CEPCase_Generate {
 
     public static void main (String[] args) throws Exception {
+        boolean finished = false;
 
         // Set up the execution environment
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -44,7 +45,7 @@ public class CEPCase_Generate {
 
         // Set wanted pattern and contiguity condition
         // (1 = strict, 2 = relaxed, 3 = non deterministic relaxed)
-        Generate wanted = new Generate("a b* c", 2);
+        Generate wanted = new Generate("a b{1,2} c", 2);
 
         // Set after match skip strategy
         // (1 = no skip, 2 = skip to next, 3 = skip past last event, 4 = skip to first, 5 = skip to last)
@@ -64,7 +65,7 @@ public class CEPCase_Generate {
         // Print matches
         result.print();
 
-        env.execute("Flink CEP Contiguity Conditions, Simple Pattern Example");
+        env.execute("Flink CEP Pattern Detection Automation");
     }
 }
 

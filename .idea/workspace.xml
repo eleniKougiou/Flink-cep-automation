@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fbe3e110-6594-4b4a-9be8-d4c7bf621ea1" name="Default Changelist" comment="" />
+    <list default="true" id="fbe3e110-6594-4b4a-9be8-d4c7bf621ea1" name="Default Changelist" comment="Additional feature for a pattern: { , }">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/flinkCEP/cases/CEPCase_Generate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/flinkCEP/cases/CEPCase_Generate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/flinkCEP/events/Generate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/flinkCEP/events/Generate.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,7 +19,11 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1kxcSdDIu0g6qKBjJewxUmsmHuy" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -25,6 +34,7 @@
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
@@ -55,5 +65,9 @@
       <updated>1606645684940</updated>
     </task>
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Additional feature for a pattern: { , }" />
+    <option name="LAST_COMMIT_MESSAGE" value="Additional feature for a pattern: { , }" />
   </component>
 </project>
