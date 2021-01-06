@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fbe3e110-6594-4b4a-9be8-d4c7bf621ea1" name="Default Changelist" comment="Additional feature for a pattern: { , }">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="fbe3e110-6594-4b4a-9be8-d4c7bf621ea1" name="Default Changelist" comment="Passing parameters via command line">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flinkCEP-Patterns.iml" beforeDir="false" afterPath="$PROJECT_DIR$/flinkCEP-Patterns.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/flinkCEP/cases/CEPCase_Generate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/flinkCEP/cases/CEPCase_Generate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/flinkCEP/events/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/flinkCEP/events/Event.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/flinkCEP/events/Generate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/flinkCEP/events/Generate.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -36,15 +38,16 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.5695538" />
+    <property name="project.structure.side.proportion" value="0.32935154" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RunManager">
     <configuration name="CEPCase_Generate" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="flinkCEP.cases.CEPCase_Generate" />
       <module name="flinkCEP-Patterns" />
+      <option name="PROGRAM_PARAMETERS" value="0 'ab*c' 2 1" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -64,6 +67,14 @@
       <option name="presentableId" value="Default" />
       <updated>1606645684940</updated>
     </task>
+    <task id="LOCAL-00001" summary="Additional feature for a pattern: { , }">
+      <created>1609612832791</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1609612832791</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

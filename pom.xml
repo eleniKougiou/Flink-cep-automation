@@ -20,8 +20,8 @@ under the License.
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>flinkCEP-Patterns</groupId>
-	<artifactId>flinkCEP-Patterns</artifactId>
+	<groupId>flinkCEP-GeneratePatterns</groupId>
+	<artifactId>flinkCEP-GeneratePatterns</artifactId>
 	<version>0.1</version>
 	<packaging>jar</packaging>
 
@@ -58,13 +58,13 @@ under the License.
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-java</artifactId>
 			<version>${flink.version}</version>
-			<scope>provided</scope>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
 			<version>${flink.version}</version>
-			<scope>provided</scope>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.flink</groupId>
@@ -75,6 +75,7 @@ under the License.
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-table-api-java</artifactId>
 			<version>${flink.version}</version>
+			<scope>compile</scope>
 		</dependency>
 
 		<!-- Add logging framework, to produce console output when running in the IDE. -->
@@ -95,15 +96,25 @@ under the License.
 
 	<build>
 		<plugins>
-
 			<!-- Java Compiler -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.8.1</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<configuration>
+					<skipTests>true</skipTests>
+					<mainClass>flinkCEP.cases.CEPCase_Generate</mainClass>
+					<cleanupDaemonThreads>false</cleanupDaemonThreads>
 				</configuration>
 			</plugin>
 

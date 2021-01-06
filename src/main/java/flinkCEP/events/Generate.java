@@ -22,6 +22,9 @@ import org.apache.flink.cep.nfa.aftermatch.AfterMatchSkipStrategy;
 import org.apache.flink.cep.pattern.Pattern;
 import org.apache.flink.cep.pattern.conditions.SimpleCondition;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
@@ -33,6 +36,8 @@ public class Generate implements Serializable{
     static String strP; // wanted pattern
     static int n = 0; // number of events in the pattern
     static int nr = 0; // number of results
+    static double start = System.currentTimeMillis();
+    static StreamExecutionEnvironment env;
 
     static int contiguity = 2;
     // 1 = strict, 2 = relaxed, 3 = non-deterministic relaxed
@@ -44,9 +49,10 @@ public class Generate implements Serializable{
     String patternName;
     static String inputStr;
 
-    public Generate(String strP, int contiguity){
+    public Generate(String strP, int contiguity, StreamExecutionEnvironment env){
         this.strP = strP.toLowerCase(Locale.ROOT).replaceAll("\\s+","");
         this.contiguity = contiguity;
+        this.env = env;
     }
 
     public void setStrP(String strP) {
@@ -63,6 +69,10 @@ public class Generate implements Serializable{
 
     public static int getNr() {
         return nr;
+    }
+
+    public static double getTime() {
+        return System.currentTimeMillis() - start;
     }
 
     public void setContiguity(int contiguity) {
@@ -277,9 +287,9 @@ public class Generate implements Serializable{
                     }
                 }
             }
-            return nr + ". " + strResult;
+            return nr + ". " + strResult + " (" + getTime() / 1000 + " sec)";
         });
-        return result;
+        return result; //.union(env.fromElements("Number of Matching Results: " + nr)).union(env.fromElements("Total time: " + getTime()));
     }
 
     @Override

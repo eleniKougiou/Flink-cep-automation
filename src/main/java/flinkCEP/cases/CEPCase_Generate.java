@@ -28,11 +28,17 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import flinkCEP.events.Event;
 import flinkCEP.events.Generate;
 
+import static org.apache.flink.core.fs.FileSystem.WriteMode.NO_OVERWRITE;
+import static org.apache.flink.core.fs.FileSystem.WriteMode.OVERWRITE;
+
 // Automatic pattern generation and processing
 public class CEPCase_Generate {
 
     public static void main (String[] args) throws Exception {
-        boolean finished = false;
+
+        String wantedStr = args[1];
+        int contiguity = Integer.parseInt(args[2]);
+        int strategy = Integer.parseInt(args[3]);
 
         // Set up the execution environment
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -45,25 +51,29 @@ public class CEPCase_Generate {
 
         // Set wanted pattern and contiguity condition
         // (1 = strict, 2 = relaxed, 3 = non deterministic relaxed)
-        Generate wanted = new Generate("a b{1,2} c", 2);
+        //Generate wanted = new Generate("a b* c", 2);
+        Generate wanted = new Generate(wantedStr, contiguity, env);
 
         // Set after match skip strategy
         // (1 = no skip, 2 = skip to next, 3 = skip past last event, 4 = skip to first, 5 = skip to last)
-        wanted.setStrategy(1, ""); // no skip
+        wanted.setStrategy(strategy, ""); // no skip
+        DataStream<String> info = env.fromElements(wanted.toString());
 
         // Create wanted pattern
         Pattern<Event, ?> pattern = wanted.createPattern();
 
-        // Print info
-        env.fromElements(wanted.toString()).print();
+
 
         PatternStream<Event> patternStream = CEP.pattern(input, pattern);
 
         // Create result with matches
         DataStream<String> result = wanted.createResult(patternStream);
 
-        // Print matches
-        result.print();
+        // Print and write to file
+        DataStream<String> all = info.union(result);
+        all.print();
+        String resultPath = "/home/eleni/result.txt";
+        all.writeAsText(resultPath, OVERWRITE);
 
         env.execute("Flink CEP Pattern Detection Automation");
     }
