@@ -57,11 +57,11 @@ public class CEPCase_Generate {
         // Set after match skip strategy
         // (1 = no skip, 2 = skip to next, 3 = skip past last event, 4 = skip to first, 5 = skip to last)
         wanted.setStrategy(strategy, ""); // no skip
-        DataStream<String> info = env.fromElements(wanted.toString());
 
         // Create wanted pattern
         Pattern<Event, ?> pattern = wanted.createPattern();
 
+        DataStream<String> info = env.fromElements(wanted.toString());
 
 
         PatternStream<Event> patternStream = CEP.pattern(input, pattern);

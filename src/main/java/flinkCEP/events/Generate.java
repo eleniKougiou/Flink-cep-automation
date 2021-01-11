@@ -289,12 +289,12 @@ public class Generate implements Serializable{
             }
             return nr + ". " + strResult + " (" + getTime() / 1000 + " sec)";
         });
-        return result; //.union(env.fromElements("Number of Matching Results: " + nr)).union(env.fromElements("Total time: " + getTime()));
+        return result;
     }
 
     @Override
     public String toString() {
-        return "Given Sequence: " + inputStr + "\nWanted pattern: " + strP + " (Number of events: " + n + ")"
+        return "Wanted pattern: " + strP + " (Number of events: " + n + ")"
                 + "\nContiguity condition: " + this.getContiguity() + "\nAfter match strategy: "
                 + this.getStrategy() + "\n\nMatching results:";
     }
