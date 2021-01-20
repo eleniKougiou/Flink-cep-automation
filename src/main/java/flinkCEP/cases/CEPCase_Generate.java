@@ -28,7 +28,6 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import flinkCEP.events.Event;
 import flinkCEP.events.Generate;
 
-import static org.apache.flink.core.fs.FileSystem.WriteMode.NO_OVERWRITE;
 import static org.apache.flink.core.fs.FileSystem.WriteMode.OVERWRITE;
 
 // Automatic pattern generation and processing
@@ -39,6 +38,8 @@ public class CEPCase_Generate {
         String wantedStr = args[1];
         int contiguity = Integer.parseInt(args[2]);
         int strategy = Integer.parseInt(args[3]);
+        String inputFile = args[4]; //seq.txt
+        String outputFile = args[5]; //result.txt
 
         // Set up the execution environment
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -47,7 +48,7 @@ public class CEPCase_Generate {
         env.setParallelism(1);
 
         // Create input sequence
-        DataStream<Event> input = env.fromCollection(Generate.createInput("/home/eleni/seq.txt"));
+        DataStream<Event> input = env.fromCollection(Generate.createInput("/home/eleni/" + inputFile));
 
         // Set wanted pattern and contiguity condition
         // (1 = strict, 2 = relaxed, 3 = non deterministic relaxed)
@@ -63,7 +64,6 @@ public class CEPCase_Generate {
 
         DataStream<String> info = env.fromElements(wanted.toString());
 
-
         PatternStream<Event> patternStream = CEP.pattern(input, pattern);
 
         // Create result with matches
@@ -72,7 +72,7 @@ public class CEPCase_Generate {
         // Print and write to file
         DataStream<String> all = info.union(result);
         all.print();
-        String resultPath = "/home/eleni/result.txt";
+        String resultPath = "/home/eleni/" + outputFile;
         all.writeAsText(resultPath, OVERWRITE);
 
         env.execute("Flink CEP Pattern Detection Automation");
