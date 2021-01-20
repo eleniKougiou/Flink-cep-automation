@@ -1,9 +1,11 @@
 # Flink-cep-automation
 
-Using Apache [Flink CEP](https://github.com/apache/flink) to create an automatic pattern generator.
+### Using Apache [Flink CEP](https://github.com/apache/flink) to automatically produce patterns and their matching results.
 
-In CEPCase_Generate the input sequence (input) and the event pattern (wanted), based on different contiguity conditions and after match skip strategies,
-are created (createInput, createPattern). Then the matching results are produced (createResult). 
-All the above processes are performed automatically with the help of class Generate.
+- StreamGenerator.py creates a sequence based on the the requested pattern and conditions we want to examine.
 
-StreamGenerator.py generates the input sequence based on different parameters.
+- In Generate.java methods have been developed in order to read the input sequence from the file produced above (createIput), to create the wanted pattern (createPattern) based on specific conditions (contiguity & after match strategy) and to produce the matching results (createResult).
+
+  CEPCase_Generate.java is the one that uses the above methods properly and creates the results in an output file, in order to be able to draw conclusions about different conditions.
+ 
+- "experiments" folder contains shell scripts, which run the above files with the help of run.sh, runpython.sh and runflink.sh, to experiment with different conditions and study the results.
