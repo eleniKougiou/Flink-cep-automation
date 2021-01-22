@@ -4,9 +4,9 @@
 # There you can find necessary project files
 cd ..
 
-# Terminal: ./runflink.sh arg1 arg2 arg3 arg4 arg5
-# arg1 = pattern, arg2 = contiguity, arg3 = strategy
-# arg4 = input file, arg5 = output file
+# Terminal: ./runflink.sh arg1 arg2 arg3 arg4 arg5 arg6
+# arg1 = pattern, arg2 = contiguity, arg3 = strategy, arg4 = parallelism
+# arg5 = input file, arg6 = output file
 
 # Load arguments
 export JAVA_PROGRAM_ARGS=`echo "$@"` 
