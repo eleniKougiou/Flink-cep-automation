@@ -48,6 +48,7 @@ public class Generate implements Serializable{
     static AfterMatchSkipStrategy skipStrategy;
     String patternName;
     static String inputStr;
+    static boolean first = true;
 
     public Generate(String strP, int contiguity, StreamExecutionEnvironment env){
         this.strP = strP.toLowerCase(Locale.ROOT).replaceAll("\\s+","");
@@ -287,7 +288,11 @@ public class Generate implements Serializable{
                     }
                 }
             }
-            return nr + ". " + strResult + " (" + getTime() / 1000 + " sec)";
+            if (first){ // Print time only the first time (all matches have already been found)
+            strResult += " (" + getTime() / 1000 + " sec)";
+            first = false;
+            }
+            return nr + ". " + strResult;
         });
         return result;
     }
