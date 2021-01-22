@@ -38,14 +38,15 @@ public class CEPCase_Generate {
         String wantedStr = args[0];
         int contiguity = Integer.parseInt(args[1]);
         int strategy = Integer.parseInt(args[2]);
-        String inputFile = args[3]; // path for seq.txt
-        String outputFile = args[4]; // path for result.txt
+        int parallelism = Integer.parseInt(args[3]);
+        String inputFile = args[4]; // path for seq.txt
+        String outputFile = args[5]; // path for result.txt
 
         // Set up the execution environment
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         // Set parallelism to 1
-        env.setParallelism(1);
+        env.setParallelism(parallelism);
 
         // Create input sequence
         DataStream<Event> input = env.fromCollection(Generate.createInput(inputFile));
@@ -76,5 +77,3 @@ public class CEPCase_Generate {
         env.execute("Flink CEP Pattern Detection Automation");
     }
 }
-
-
