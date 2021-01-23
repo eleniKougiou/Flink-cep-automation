@@ -78,7 +78,7 @@ elif [[ $7 =~ $int ]] ; then # arg7 is not a String
 elif [[ $8 =~ $int ]] ; then # arg8 is not a String
    	echo "ERROR: arg8 must be a String (give the name of output file)"
 
-elif ! [[ $9 =~ $int ]] ; then # arg9 is not a String
+elif [[ $9 =~ $int ]] ; then # arg9 is not a String
    	echo "ERROR: arg9 must be a String (give path to save generated files)"
 
 else # correct arguments
