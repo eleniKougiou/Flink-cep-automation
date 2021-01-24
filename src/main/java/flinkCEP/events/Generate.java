@@ -277,7 +277,13 @@ public class Generate implements Serializable{
         DataStream<String> result =  patternStream.select((Map<String, List<Event>> p) -> {
             String strResult = "";
 
-            int test = getN();
+            int test;
+            // In submitflink the n has not been updated 
+            if (n > 0) {
+                test = n;
+            } else{
+                test = 10;
+            }
             nr++;
             for (int i = 0; i < test; i++){
                 String strN = Integer.toString(i + 1);
