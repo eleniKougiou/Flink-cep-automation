@@ -92,5 +92,5 @@ else # correct arguments
 
 	echo "RUN FLINK PROGRAM"
 	./runflink.sh $1 $4 $5 $6 $inputPath $outputPath
-	./submitflink.sh $1 $4 $5 $6 $inputPath $outputPath
+	#./submitflink.sh $1 $4 $5 $6 $inputPath $outputPath
 fi
