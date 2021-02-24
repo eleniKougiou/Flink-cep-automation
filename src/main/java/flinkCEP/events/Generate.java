@@ -196,7 +196,7 @@ public class Generate implements Serializable{
         SimpleCondition<Event> cond = new SimpleCondition<Event>() {
             @Override
             public boolean filter(Event value) throws Exception {
-                return value.getName().toLowerCase(Locale.ROOT).startsWith(ev);
+                return value.getValue().toLowerCase(Locale.ROOT).startsWith(ev);
             }
         };
 
@@ -227,7 +227,7 @@ public class Generate implements Serializable{
         SimpleCondition<Event> cond = new SimpleCondition<Event>() {
             @Override
             public boolean filter(Event value) throws Exception {
-                return value.getName().toLowerCase(Locale.ROOT).startsWith(ev);
+                return value.getValue().toLowerCase(Locale.ROOT).startsWith(ev);
             }
         };
 
@@ -239,7 +239,7 @@ public class Generate implements Serializable{
             p = Pattern.<Event>begin(strN, skipStrategy).where(cond).or(new SimpleCondition<Event>() {
                 @Override
                 public boolean filter(Event value) throws Exception {
-                    return value.getName().toLowerCase(Locale.ROOT).startsWith(evNext);
+                    return value.getValue().toLowerCase(Locale.ROOT).startsWith(evNext);
                 }
             });
         }else{
@@ -248,7 +248,7 @@ public class Generate implements Serializable{
                     p = p.next(strN).where(cond).or(new SimpleCondition<Event>() {
                         @Override
                         public boolean filter(Event value) throws Exception {
-                            return value.getName().toLowerCase(Locale.ROOT).startsWith(evNext);
+                            return value.getValue().toLowerCase(Locale.ROOT).startsWith(evNext);
                         }
                     });
                     break;
@@ -256,7 +256,7 @@ public class Generate implements Serializable{
                     p = p.followedBy(strN).where(cond).or(new SimpleCondition<Event>() {
                         @Override
                         public boolean filter(Event value) throws Exception {
-                            return value.getName().toLowerCase(Locale.ROOT).startsWith(evNext);
+                            return value.getValue().toLowerCase(Locale.ROOT).startsWith(evNext);
                         }
                     });
                     break;
@@ -264,7 +264,7 @@ public class Generate implements Serializable{
                     p = p.followedByAny(strN).where(cond).or(new SimpleCondition<Event>() {
                         @Override
                         public boolean filter(Event value) throws Exception {
-                            return value.getName().toLowerCase(Locale.ROOT).startsWith(evNext);
+                            return value.getValue().toLowerCase(Locale.ROOT).startsWith(evNext);
                         }
                     });
                     break;
@@ -290,13 +290,13 @@ public class Generate implements Serializable{
                 // Check null because the optional() quantifier can be used
                 if (p.get(strN) != null) {
                     for (int j = 0; j < p.get(strN).size(); j++) { // for looping patterns (+, *)
-                        strResult += p.get(strN).get(j).getName() + " ";
+                        strResult += p.get(strN).get(j).getValue() + " ";
                     }
                 }
             }
             if (first){ // Print time only the first time (all matches have already been found)
-            strResult += " (" + getTime() / 1000 + " sec)";
-            first = false;
+                strResult += " (" + getTime() / 1000 + " sec)";
+                first = false;
             }
             return nr + ". " + strResult;
         });
@@ -330,9 +330,14 @@ public class Generate implements Serializable{
     public static Collection<Event> createInput(String pathName) throws Exception {
         Collection<Event> events = new ArrayList<>();
         inputStr = readFile(pathName);
+        String[] words = inputStr.split(",");
+
         for (int i = 0; i < inputStr.length(); i++){
-            events.add(new Event(i, Character.toString(inputStr.charAt(i))));
+            events.add(new Event(Integer.parseInt(Character.toString(inputStr.charAt(i))), Integer.parseInt(Character.toString(inputStr.charAt(i + 2))), Character.toString(inputStr.charAt(i + 4))));
+            i += 4;
+            //events.add(new Event(0, 0, Character.toString(inputStr.charAt(i))));
         }
+
         return events;
     }
 }

@@ -22,34 +22,43 @@ import java.util.Objects;
 
 public class Event{
 
-    private String name;
-    private int id;
+    private String value;
+    private int stream_id, window_id;
 
     public Event() {}
-    public Event(int id, String name) {
-        this.id = id;
-        this.name = name;
+    public Event(int stream_id, int window_id, String value) {
+        this.stream_id = stream_id;
+        this.window_id = window_id;
+        this.value = value;
     }
 
-    public String getName() {
-        return name;
+    public String getValue() {
+        return value;
     }
 
-    public void setName(String name){
-        this.name = name;
+    public void setValue(String value){
+        this.value = value;
     }
 
-    public int getId() {
-        return id;
+    public int getStream_Id() {
+        return stream_id;
     }
 
-    public void setId(int id){
-        this.id = id;
+    public void setStream_id(int stream_id){
+        this.stream_id = stream_id;
+    }
+
+    public int getWindow_id() {
+        return window_id;
+    }
+
+    public void setWindow_id(int window_id) {
+        this.window_id = window_id;
     }
 
     @Override
     public String toString() {
-        return ("Event(" + id + ", " + name + ")");
+        return ("Event(" + stream_id + ", " + window_id + ", " + value + ")");
     }
 
     @Override
@@ -57,7 +66,7 @@ public class Event{
         if (obj instanceof Event) {
             Event other = (Event) obj;
 
-            return name.equals(other.name) && id == other.id;
+            return value.equals(other.value) && stream_id == other.stream_id && window_id == other.window_id;
         } else {
             return false;
         }
@@ -65,7 +74,6 @@ public class Event{
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, id);
+        return Objects.hash(value, stream_id, window_id);
     }
 }
-

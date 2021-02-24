@@ -3,86 +3,145 @@
 
 # In[1]:
 
-import sys
+
 import rstr
 import string
 import random
-import secrets
-
-# generate a random stream of characters
-def randomstream_generator(size=10, chars=string.ascii_lowercase):
-    return ''.join(secrets.choice(chars) for _ in range(size))
+import pandas as pd
+from numpy.random import default_rng
+import numpy as np
 
 
-# inserts a matching string at a random location in a stream
-# note that we might inject a pattern within an already added pattern from a previous call
-# this does not matter for our testing purposes, as long as the stream is large
-# so that the probability of such a "collision" is small
-def inject_one(stream, match):
-    pos = secrets.randbelow(len(stream))
-    return stream[:pos] + match + stream[pos:]
+#####INPUT PARAMETERS #####
+## pattern
+## stream_length
+## num_sub_streams
+## window_size
+## num_matches
+## strict
+###########################
+
+#regular exrpession
+pattern = 'ab{0,2}c'
+
+#length of generated stream (#events)
+#this value include all individual substreams
+#defined with the num_streams parameter (discussed next)
+#the actual size of the stream is slightly larger because of
+#the multi-event patterns we generate
+
+stream_length = 10000
+
+#num_sub_streams affects the number of sub-streams to create
+#events will be distributed among sub-streams using UNI or ZIPF distribution
+#use a value num_sub_streams > 0 for UNIFORM allocation of events across num_sub_streams with ids in range[0,x)
+#if num_sub_streams = 0 then a zipf distribution will be used with alpha = 2
+num_sub_streams = 2
 
 
-# more complex version of the above that injects a list of matches with no collisions
-def inject_many(stream, matches):
-    pos = [0];
-    n = len(matches)
-    # create random positions where the matches will be added
-    for m in matches:
-        pos.append(secrets.randbelow(len(stream)))
-    pos = sorted(pos)
-    out = ''
-    for i in range(1, n + 1):
-        if verbose:
-            print('injection ', i, ' of match', matches[i - 1], ' at position ', pos[i])
-        out = out + stream[pos[i - 1]:pos[i]] + matches[i - 1]
-    out += stream[pos[n]:]
-    return out
+#size of count-based window
+window_size = 100
 
-# augment a match using the _ character
-# useful when testing no_strict policy
+#number of matches to generate
+num_matches = 5
+strict = True #if false then it will pad generated matches with random characters \
 
-def augment_match(m, max_aug=10):
+###############################
+#note assuming uniform distribution each sub-stream will have about stream_length/(num_sub_streams*window_size) windows
+
+verbose = False
+
+
+# In[2]:
+
+
+rng = default_rng()
+alpha = 2
+#build an array with id values based on selected distribution
+if num_sub_streams > 0:
+    Stream_IDs = [random.choice(range(num_sub_streams)) for i in range(stream_length)]
+else:
+    Stream_IDs = rng.zipf(alpha, stream_length)
+
+
+# In[3]:
+
+
+def get_stream_id():
+    return random.choice(Stream_IDs)
+
+def randomstream_generator_df(size,chars = string.ascii_lowercase):
+    stream = pd.DataFrame(columns = ['pos', 'stream_id', 'event'])
+    for i in range(size):
+        stream_id = get_stream_id()
+        event = random.choice(chars)
+        stream.loc[i] = [i, stream_id, event]
+    return stream
+
+def augment_match(m, max_aug = 10):
     if verbose:
         print('Augmenting match:', m)
-    for i in range(0, secrets.randbelow(max_aug) + 1):
-        # print(i)
-        loc = secrets.randbelow(len(m) - 1) + 1
-        m = m[:loc] + '_' + m[loc:]
+    for i in range(0, random.randrange(max_aug) + 1):
+        #print(i)
+        loc=random.randrange(len(m)-1)+1
+        m = m[:loc]+'_'+m[loc:]
     if verbose:
         print('Augmented match:', m)
     return m
 
 
-# print debug info
-verbose = True
+# In[4]:
 
-# arguments: 1 = pattern, 2 = stream length, 3 = number of matches, 4 = contiguity condition, 5 = path for output file
-pattern = sys.argv[1]
-stream_length = int(sys.argv[2])
-num_matches = int(sys.argv[3])
-strict = int(sys.argv[4]) == 1
-output_file = sys.argv[5] # path for creating 'seq_.txt'
 
-# initialize a random stream
-stream = randomstream_generator(size=stream_length)
+#create a stream of random events
+stream = randomstream_generator_df(stream_length)
+#print(stream)
 
+
+# In[5]:
+
+
+#create a list of matches
 matches = []
 for i in range(num_matches):
     s = rstr.xeger(pattern)
-    if verbose:
-        print("Generated a new pattern:", s)
-    # stream=inject_one(stream,s)
     if not strict:
         s = augment_match(s, 10)
     matches.append(s)
+if verbose:
+    print(matches)
 
-generated_stream = inject_many(stream, matches)
-# print(generated_stream)
 
-# write file to the appropriate experiment folder 
-f =open(output_file, "w")
+# In[6]:
 
-for event in generated_stream:
-    f.write(event + "\n") # write one character per row
+
+#append matches at random positions
+for s in matches:
+    m_pos = random.randint(0, stream_length - 1)
+    stream.loc[len(stream)] = [m_pos, get_stream_id(), s]
+
+#print(stream)
+#sort stream by pos so that injected matches are placed at their proper position
+stream.sort_values(by = 'pos', inplace = True)
+#print(stream)
+
+
+# In[7]:
+
+
+window_count = np.zeros(1 + max(Stream_IDs),dtype = np.uint32)
+window_id = np.zeros(1 + max(Stream_IDs),dtype = np.uint32)
+
+f = open("data.txt", "w")
+for index, row in stream.iterrows():
+    stream_id = row['stream_id']
+    if window_count[stream_id] >= window_size:
+        window_id[stream_id] += 1
+        window_count[stream_id] = 0
+    for e in row['event']:
+        window_count[stream_id] += 1
+        print(str(stream_id) + ',' + str(window_id[stream_id]) + ',' + e)
+        f.write(str(stream_id) + ',' + str(window_id[stream_id]) + ',' + e + '\n')
+print('-1,-1,KILL')
+f.write('-1,-1,KILL')
 f.close()
