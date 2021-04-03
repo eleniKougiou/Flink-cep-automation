@@ -52,6 +52,7 @@ public class CEPCase_Generate {
         // Set parallelism to 1
         env.setParallelism(parallelism);
         env.fromElements(args.length).print();
+        int nArgs = args.length;
         DataStream<Event> input;
 
         // Create input sequence
@@ -85,7 +86,7 @@ public class CEPCase_Generate {
 
         // Set wanted pattern and contiguity condition
         // (1 = strict, 2 = relaxed, 3 = non deterministic relaxed)
-        Generate wanted = new Generate(wantedStr, contiguity, env);
+        Generate wanted = new Generate(wantedStr, contiguity, env, nArgs);
 
         // Set after match skip strategy
         // (1 = no skip, 2 = skip to next, 3 = skip past last event, 4 = skip to first, 5 = skip to last)

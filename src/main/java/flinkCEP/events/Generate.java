@@ -49,11 +49,13 @@ public class Generate implements Serializable{
     String patternName;
     static String inputStr;
     static boolean first = true;
+    static int nArgs = 0;
 
-    public Generate(String strP, int contiguity, StreamExecutionEnvironment env){
+    public Generate(String strP, int contiguity, StreamExecutionEnvironment env, int nArgs){
         this.strP = strP.toLowerCase(Locale.ROOT).replaceAll("\\s+","");
         this.contiguity = contiguity;
         this.env = env;
+        this.nArgs = nArgs;
     }
 
     public void setStrP(String strP) {
@@ -307,7 +309,7 @@ public class Generate implements Serializable{
     public String toString() {
         return "Wanted pattern: " + strP + " (Number of events: " + n + ")"
                 + "\nContiguity condition: " + this.getContiguity() + "\nAfter match strategy: "
-                + this.getStrategy() + "\n\nMatching results:";
+                + this.getStrategy() + "\nNumber of Arguments: " + nArgs + "\n\nMatching results:";
     }
 
     public static String readFile(String pathName){
