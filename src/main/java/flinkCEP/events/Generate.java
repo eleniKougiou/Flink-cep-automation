@@ -332,9 +332,10 @@ public class Generate implements Serializable{
         inputStr = readFile(pathName);
         String[] words = inputStr.split(",");
 
-        for (int i = 0; i < inputStr.length(); i++){
-            events.add(new Event(Integer.parseInt(Character.toString(inputStr.charAt(i))), Integer.parseInt(Character.toString(inputStr.charAt(i + 2))), Character.toString(inputStr.charAt(i + 4))));
-            i += 4;
+        for (int i = 0; i < words.length; i++){
+            //events.add(new Event(Integer.parseInt(Character.toString(inputStr.charAt(i))), Integer.parseInt(Character.toString(inputStr.charAt(i + 2))), Character.toString(inputStr.charAt(i + 4))));
+            events.add(new Event(Integer.parseInt(words[i]), Integer.parseInt(words[i + 1]), words[i + 2]));
+            i += 2;
             //events.add(new Event(0, 0, Character.toString(inputStr.charAt(i))));
         }
 

@@ -17,61 +17,52 @@
  */
 
 package flinkCEP.cases;
-
 import flinkCEP.KafkaSink;
+import flinkCEP.events.Event;
+import flinkCEP.events.Generate;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.cep.CEP;
 import org.apache.flink.cep.PatternStream;
 import org.apache.flink.cep.pattern.Pattern;
-
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-
-import flinkCEP.events.Event;
-import flinkCEP.events.Generate;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 
 import java.util.Properties;
 
 import static org.apache.flink.core.fs.FileSystem.WriteMode.OVERWRITE;
 
-// Automatic pattern generation and processing
+//Automatic pattern generation and processing
 public class CEPCase_Generate {
+    public static String inputFile, outputFile, type, wantedStr;
+    public static int parallelism, contiguity, strategy;
 
     public static void main (String[] args) throws Exception {
 
-        String inputFile = "data.txt";
-        String outputFile = "out.txt";
-        String type = "Kafka";
-        int parallelism = 4;
-        int contiguity = 2;
-        int strategy = 1;
-        String wantedStr = "ab+c";
-
-        /*String wantedStr = args[0];
-        int contiguity = Integer.parseInt(args[1]);
-        int strategy = Integer.parseInt(args[2]);
-        int parallelism = Integer.parseInt(args[3]);
-        String inputFile = args[4]; // path for seq.txt
-        String outputFile = args[5]; // path for result.txt
-        String type = args[6];*/
+        if(args.length == 7){
+            givenArgs(args);
+        }else {
+            defaultArgs();
+        }
 
         // Set up the execution environment
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         // Set parallelism to 1
         env.setParallelism(parallelism);
+        env.fromElements(args.length).print();
+        DataStream<Event> input;
 
         // Create input sequence
-        DataStream<Event> input;
         if(type.equals("Kafka")) {
+
             Properties properties = new Properties();
-            properties.setProperty("bootstrap.servers", "localhost:9092");
+            properties.setProperty("bootstrap.servers", "83.212.78.117:9092");
             properties.setProperty("group.id", "test");
 
             DataStream<String> stream = env
-                    .addSource(new FlinkKafkaConsumer<>("CEPdata", new SimpleStringSchema(), properties)/*.setStartFromEarliest()*/);
+                    .addSource(new FlinkKafkaConsumer<>("CEPdata", new SimpleStringSchema(), properties));
 
             input = stream.map(new MapFunction<String, Event>() {
 
@@ -86,10 +77,11 @@ public class CEPCase_Generate {
                     return new Event(Integer.parseInt(words[0]), Integer.parseInt(words[1]), words[2]);
                 }
             });}
+
         else{
             input = env.fromCollection(Generate.createInput(inputFile));
         }
-        //input.print();
+        //input.keyBy("stream_id", "window_id").print();
 
         // Set wanted pattern and contiguity condition
         // (1 = strict, 2 = relaxed, 3 = non deterministic relaxed)
@@ -109,18 +101,40 @@ public class CEPCase_Generate {
         // Create result with matches
         DataStream<String> result = wanted.createResult(patternStream);
 
-        // Print and write to file
+
         DataStream<String> all = info.union(result);
+        // Print and write to file
+
         if(type.equals("Kafka")){
-            all.print();
-            KafkaSink kp = new KafkaSink("localhost:9092", "CEPout");
-            //all.writeAsText(outputFile, OVERWRITE);
+
+            KafkaSink kp = new KafkaSink("83.212.78.117:9092", "CEPout");
             all.addSink(kp.getProducer());
         }else {
             all.print();
             all.writeAsText(outputFile, OVERWRITE);
         }
-
         env.execute("Flink CEP Pattern Detection Automation");
+
+
+    }
+
+    private static void defaultArgs() {
+        inputFile = "here.txt";
+        outputFile = "results.txt";
+        type = "Kafka";
+        parallelism = 4;
+        contiguity = 2;
+        strategy = 1;
+        wantedStr = "ab+c";
+    }
+
+    private static void givenArgs(String [] args){
+        type = args[0];
+        inputFile = args[1];
+        outputFile = args[2];
+        wantedStr = args[3];
+        parallelism = Integer.parseInt(args[4]);
+        contiguity = Integer.parseInt(args[5]);
+        strategy = Integer.parseInt(args[6]);
     }
 }
