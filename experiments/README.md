@@ -1,3 +1,7 @@
+WARNING: Changes have been made, these experiments can no longer be tested
+
+---
+
 ## Instructions to be able to run an experiment
 
 1. Clone "Flink-cep-automation" repository on your computer (command: git clone https://github.com/eleniKougiou/Flink-cep-automation.git).
