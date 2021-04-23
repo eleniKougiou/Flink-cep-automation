@@ -3,11 +3,15 @@
 
 The purpose of the project is to create a generalized Complex Event Processing Operator using the library [FlinkCEP](https://ci.apache.org/projects/flink/flink-docs-stable/dev/libs/cep.html). 
 
-## Contributors
+### Contributors
 - Kontaxakis Antonios 
 - Kotidis Yannis
 - Deligiannakis Antonios
-
+ 
+ 
+ In progress
+ ---
+ 
 - StreamGenerator.py creates a sequence based on the the requested pattern and conditions we want to examine.
 
 - In Generate.java methods have been developed in order to read the input sequence from the file produced above (createInput), to create the wanted pattern (createPattern) based on specific conditions (contiguity & after match strategy) and to produce the matching results (createResult).
