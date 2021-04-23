@@ -160,8 +160,6 @@ if True:
             window_count[stream_id] = 0
         for e in row['event']:
             window_count[stream_id] += 1
-            #print(str(stream_id) + ',' + str(window_id[stream_id]) + ',' + e)
             f.write(str(stream_id) + ',' + str(window_id[stream_id]) + ',' + e + '\n')
-#print('-1, -1, KILL')
 f.write('-1, -1, KILL')
 f.close()
