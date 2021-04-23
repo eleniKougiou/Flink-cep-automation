@@ -1,6 +1,12 @@
-# Flink-cep-automation
+# Flink CEP Automation
+## AUEB | Bachelor Thesis (w / Prof. Kotidis Yannis) | 2020 - 2021
 
-### Using Apache [Flink CEP](https://github.com/apache/flink) to automatically produce patterns and their matching results.
+The purpose of the project is to create a generalized Complex Event Processing Operator using the library [FlinkCEP](https://ci.apache.org/projects/flink/flink-docs-stable/dev/libs/cep.html). 
+
+## Contributors
+- Kontaxakis Antonios 
+- Kotidis Yannis
+- Deligiannakis Antonios
 
 - StreamGenerator.py creates a sequence based on the the requested pattern and conditions we want to examine.
 
