@@ -35,101 +35,107 @@ import static org.apache.flink.core.fs.FileSystem.WriteMode.OVERWRITE;
 
 //Automatic pattern generation and processing
 public class CEPCase_Generate {
-    public static String inputFile, outputFile, type, wantedStr;
-    public static int parallelism, contiguity, strategy;
 
-    public static void main (String[] args) throws Exception {
+    private static String jobName, inputFile, outputFile, type, wantedStr, patternName;
+    private static String topicIn, topicOut, host;
+    private static int parallelism, contiguity, strategy;
 
-        if(args.length == 7){
-            givenArgs(args);
-        }else {
-            defaultArgs();
-        }
+   public static void main (String[] args) throws Exception {
 
-        // Set up the execution environment
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+       if(args.length == 12){
+           givenArgs(args);
+       }else {
+           defaultArgs();
+       }
 
-        // Set parallelism to 1
-        env.setParallelism(parallelism);
-        env.fromElements(args.length).print();
-        int nArgs = args.length;
-        DataStream<Event> input;
+       // Set up the execution environment
+       StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+       // Set parallelism
+       env.setParallelism(parallelism);
 
-        // Create input sequence
-        if(type.equals("Kafka")) {
+       DataStream<Event> input;
 
-            Properties properties = new Properties();
-            properties.setProperty("bootstrap.servers", "83.212.78.117:9092");
-            properties.setProperty("group.id", "test");
+       // Create input sequence
+       if(type.equals("Kafka")) {
+           // Read data from Kafka topic
+           Properties properties = new Properties();
+           properties.setProperty("bootstrap.servers", host + ":9092");
+           properties.setProperty("group.id", "test");
 
-            DataStream<String> stream = env
-                    .addSource(new FlinkKafkaConsumer<>("CEPdata", new SimpleStringSchema(), properties));
+           DataStream<String> stream = env
+                   .addSource(new FlinkKafkaConsumer<>(topicIn, new SimpleStringSchema(), properties));
 
             input = stream.map(new MapFunction<String, Event>() {
 
-                @Override
-                public Event map(String s) throws Exception {
+               @Override
+               public Event map(String s) throws Exception {
 
-                    String[] words = s.split(",");
+                   String[] words = s.split(",");
 
-                    if(words[2].equals("KILL"))
-                        throw new Exception();
+                   //
+                   if(words[2].equals("KILL")){
+                       throw new Exception();
+                   }
 
-                    return new Event(Integer.parseInt(words[0]), Integer.parseInt(words[1]), words[2]);
-                }
-            });}
+                   return new Event(Integer.parseInt(words[0]), Integer.parseInt(words[1]), words[2]);
+               }
+           });}
 
-        else{
-            input = env.fromCollection(Generate.createInput(inputFile));
-        }
-        //input.keyBy("stream_id", "window_id").print();
+       else{
+           // Read data from text file
+          input = env.fromCollection(Generate.createInput(inputFile));
+       }
 
-        // Set wanted pattern and contiguity condition
-        // (1 = strict, 2 = relaxed, 3 = non deterministic relaxed)
-        Generate wanted = new Generate(wantedStr, contiguity, env, nArgs);
+       // Set wanted pattern and contiguity condition (1 = strict, 2 = relaxed, 3 = non deterministic relaxed)
+       Generate wanted = new Generate(wantedStr, contiguity);
 
-        // Set after match skip strategy
-        // (1 = no skip, 2 = skip to next, 3 = skip past last event, 4 = skip to first, 5 = skip to last)
-        wanted.setStrategy(strategy, ""); // no skip
+       // Set after match skip strategy
+       // (1 = no skip, 2 = skip to next, 3 = skip past last event, 4 = skip to first, 5 = skip to last)
+       wanted.setStrategy(strategy, patternName);
 
-        // Create wanted pattern
-        Pattern<Event, ?> pattern = wanted.createPattern();
+       // Create wanted pattern
+       Pattern<Event, ?> pattern = wanted.createPattern();
 
-        DataStream<String> info = env.fromElements(wanted.toString());
+       // Print details
+       DataStream<String> info = env.fromElements(wanted.toString());
 
-        PatternStream<Event> patternStream = CEP.pattern(input.keyBy("stream_id", "window_id"), pattern);
+       PatternStream<Event> patternStream = CEP.pattern(input.keyBy("stream_id", "window_id"), pattern);
 
-        // Create result with matches
-        DataStream<String> result = wanted.createResult(patternStream);
+       // Create result with matches
+       DataStream<String> result = wanted.createResult(patternStream);
 
+       DataStream<String> all = info.union(result);
 
-        DataStream<String> all = info.union(result);
-        // Print and write to file
+       if(type.equals("Kafka")){
+           // Write results to Kafka topic
+           KafkaSink kp = new KafkaSink(host + ":9092", topicOut);
+           all.addSink(kp.getProducer());
+       }else {
+           // Write results to file
+           all.print();
+           all.writeAsText(outputFile, OVERWRITE);
+       }
+       env.execute(jobName);
+   }
 
-        if(type.equals("Kafka")){
-
-            KafkaSink kp = new KafkaSink("83.212.78.117:9092", "CEPout");
-            all.addSink(kp.getProducer());
-        }else {
-            all.print();
-            all.writeAsText(outputFile, OVERWRITE);
-        }
-        env.execute("Flink CEP Pattern Detection Automation");
-
-
-    }
-
+   // Default values
     private static void defaultArgs() {
         inputFile = "here.txt";
         outputFile = "results.txt";
         type = "Kafka";
+        wantedStr = "ab+c";
         parallelism = 4;
         contiguity = 2;
-        strategy = 1;
-        wantedStr = "ab+c";
+        strategy = 2;
+        patternName = "1";
+        jobName = "Flink CEP Pattern Detection Automation";
+        topicIn = "CEPdata";
+        topicOut = "CEPout";
+        host = "83.212.78.117";
     }
 
-    private static void givenArgs(String [] args){
+    // Wanted values
+    private static void givenArgs(String[] args){
         type = args[0];
         inputFile = args[1];
         outputFile = args[2];
@@ -137,5 +143,10 @@ public class CEPCase_Generate {
         parallelism = Integer.parseInt(args[4]);
         contiguity = Integer.parseInt(args[5]);
         strategy = Integer.parseInt(args[6]);
+        patternName = args[7];
+        jobName = args[8];
+        topicIn = args[9];
+        topicOut = args[10];
+        host = args[11];
     }
 }
