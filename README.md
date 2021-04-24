@@ -1,7 +1,7 @@
 # Flink CEP Automation
 ## AUEB | Bachelor Thesis (w / Prof. Kotidis Yannis) | 2020 - 2021
 
-The purpose of the project is to create a generalized Complex Event Processing Operator using the library [FlinkCEP](https://ci.apache.org/projects/flink/flink-docs-stable/dev/libs/cep.html). 
+The goal of the project is to create a generalized Complex Event Processing Operator using the library [FlinkCEP](https://ci.apache.org/projects/flink/flink-docs-stable/dev/libs/cep.html). 
 
 ### Code contributors:
 - Kontaxakis Antonios 
@@ -10,7 +10,7 @@ The purpose of the project is to create a generalized Complex Event Processing O
  ---
  ## How to use:
    
-### Step 1:  
+### Step 1 - Create data:  
 [StreamGenerator.py](https://github.com/eleniKougiou/Flink-cep-automation/blob/master/Useful%20Files/StreamGenerator.py) creates the text file with the data, based on the requested pattern and conditions we want to examine. The data contains one event per line in the format ``stream_id, window_id, event`` , while the last line of the file is "-1, -1, KILL" in order to understand that there are no other events and to terminate the flink job. The user needs to enter 7 command-line arguments as follows:  
 1. Pattern (String)
 2. Stream length (int)
@@ -23,7 +23,7 @@ The purpose of the project is to create a generalized Complex Event Processing O
 #### Command example 
     ./StreamGenerator.py 'ab{1,3}(c|d)' 1000 8 100 150 True 'data.txt'
   
-### Step 2:
+### Step 2 - Send data:
 [CEPdata.java](https://github.com/eleniKougiou/Flink-cep-automation/blob/master/Data%20Kafka/src/main/java/CEPdata.java) sends the data to a Kafka topic. The user needs to enter 3 command-line arguments as follows:  
 1. File name for reading data (String)
 2. Name of the Kafka topic for sending data (String)
@@ -33,7 +33,7 @@ The purpose of the project is to create a generalized Complex Event Processing O
     java -jar data_kafka.jar 'data.txt' 'CEPdata' '1.2.3.4'
 
 
-### Step 3:
+### Step 3 - Submit job & find results:
 [CEPCase_Generate.java](https://github.com/eleniKougiou/Flink-cep-automation/blob/master/src/main/java/flinkCEP/cases/CEPCase_Generate.java) contains all the important operations:
 - Reads the data from a Kafka topic (or from a text file)
 - Re-writes the wanted regular expression to a FlinkCEP pattern based on wanted conditions
