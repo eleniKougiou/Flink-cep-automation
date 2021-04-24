@@ -6,7 +6,6 @@ The purpose of the project is to create a generalized Complex Event Processing O
 ### Contributors:
 - Kontaxakis Antonios 
 - Kotidis Yannis
-- Deligiannakis Antonios
  
  ---
  ## How to use:
@@ -31,7 +30,7 @@ The purpose of the project is to create a generalized Complex Event Processing O
 3. Host IP (String)
 
 #### Command example (with jar)
-    java -jar dataKafka.jar 'data.txt' 'CEPdata' '1.2.3.4'
+    java -jar data_kafka.jar 'data.txt' 'CEPdata' '1.2.3.4'
 
 
 ### Step 3:
@@ -39,7 +38,8 @@ The purpose of the project is to create a generalized Complex Event Processing O
 - Reads the data from a Kafka topic (or from a text file)
 - Re-writes the wanted regular expression to a FlinkCEP pattern based on wanted conditions
 - Finds the matching results
-- Writes the results to a Kafka topic (or to a text file)
+- Writes the results to a Kafka topic (or to a text file)  
+  
 The user needs to enter 12 command-line arguments as follows: 
 1. Type (String): "Kafka" for using Kafka topics to read and write, or anything else for using text files.
 2. File name for reading data (String) (useful when type != "Kafka")
