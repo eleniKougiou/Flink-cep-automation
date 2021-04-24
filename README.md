@@ -33,7 +33,7 @@ The goal of the project is to create a generalized Complex Event Processing Oper
     java -jar data_kafka.jar 'data.txt' 'CEPdata' '1.2.3.4'
 
 
-### Step 3 - Submit job & find results:
+### Step 3 - Submit flink job & find results:
 [CEPCase_Generate.java](https://github.com/eleniKougiou/Flink-cep-automation/blob/master/src/main/java/flinkCEP/cases/CEPCase_Generate.java) contains all the important operations:
 - Reads the data from a Kafka topic (or from a text file)
 - Re-writes the wanted regular expression to a FlinkCEP pattern based on wanted conditions
