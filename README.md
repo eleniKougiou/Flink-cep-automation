@@ -3,7 +3,7 @@
 
 The purpose of the project is to create a generalized Complex Event Processing Operator using the library [FlinkCEP](https://ci.apache.org/projects/flink/flink-docs-stable/dev/libs/cep.html). 
 
-### Contributors:
+### Code contributors:
 - Kontaxakis Antonios 
 - Kotidis Yannis
  
