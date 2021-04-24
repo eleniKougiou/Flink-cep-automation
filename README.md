@@ -22,21 +22,39 @@ The purpose of the project is to create a generalized Complex Event Processing O
 7. File name for writing data (String) 
 
 #### Command example 
-    ./StreamGenerator.py 'ab+(c|d)' 1000 8 100 150 True 'data.txt'
-  
-  
+    ./StreamGenerator.py 'ab{1,3}(c|d)' 1000 8 100 150 True 'data.txt'
   
 ### Step 2:
 [CEPdata.java](https://github.com/eleniKougiou/Flink-cep-automation/blob/master/Data%20Kafka/src/main/java/CEPdata.java) sends the data to a Kafka topic. The user needs to enter 3 command-line arguments as follows:  
 1. File name for reading data (String)
-2. Name of the Kafka topic to send the data (String)
+2. Name of the Kafka topic for sending data (String)
 3. Host IP (String)
 
 #### Command example (with jar)
     java -jar dataKafka.jar 'data.txt' 'CEPdata' '1.2.3.4'
 
-- In Generate.java methods have been developed in order to read the input sequence from the file produced above (createInput), to create the wanted pattern (createPattern) based on specific conditions (contiguity & after match strategy) and to produce the matching results (createResult).
 
-  CEPCase_Generate.java is the one that uses the above methods properly and creates the results in an output file, in order to be able to draw conclusions about different conditions.
- 
-- "experiments" folder contains shell scripts to experiment with different conditions and study the results. You can find more details there and try it yourself!
+### Step 3:
+[CEPCase_Generate.java](https://github.com/eleniKougiou/Flink-cep-automation/blob/master/src/main/java/flinkCEP/cases/CEPCase_Generate.java) contains all the important operations:
+- Reads the data from a Kafka topic (or from a text file)
+- Re-writes the wanted regular expression to a FlinkCEP pattern based on wanted conditions
+- Finds the matching results
+- Writes the results to a Kafka topic (or to a text file)
+The user needs to enter 12 command-line arguments as follows: 
+1. Type (String): "Kafka" for using Kafka topics to read and write, or anything else for using text files.
+2. File name for reading data (String) (useful when type != "Kafka")
+3. File name for writing results (String) (useful when type != "Kafka")
+4. Pattern (String)
+5. Parallelism (int)
+6. Contiguity Condition (int): 1 = strict, 2 = relaxed, 3 = non deterministic relaxed
+7. After match skip strategy (int): 1 = no skip, 2 = skip to next, 3 = skip past last event, 4 = skip to first, 5 = skip to last
+8. Pattern name (int) (useful when strategy = 4 or strategy = 5)
+9. Flink job name (String)
+10. Name of the Kafka topic for reading data (String) (useful when type = "Kafka")
+11. Name of the Kafka topic for writing results (String) (useful when type = "Kafka")
+12. Host IP (String)
+
+
+
+#### Command example (with jar, submitting job to a Flink cluster)
+    ./bin/flink run ./examples/flink_job.jar 'Kafka' '-' '-' 'ab{1,3}(c|d)' 4 1 3 '-' 'Example' 'CEPdata' 'CEPout' '1.2.3.4'
