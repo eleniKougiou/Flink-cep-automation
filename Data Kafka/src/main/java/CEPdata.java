@@ -9,13 +9,15 @@ import java.util.Properties;
 public class CEPdata {
 
     // Name of the file with the wanted data
-    static String fileName;
+    private static String fileName;
     // Name of the Kafka topic to send the data
-    static String topicName;
+    private static String topicName;
+
+    private static String host;
 
     public static void main (String[] args) throws Exception {
 
-        if(args.length == 2){
+        if(args.length == 3){
             givenArgs(args);
         }else {
             defaultArgs();
@@ -24,7 +26,7 @@ public class CEPdata {
         // Create instance for properties to access producer configs
         Properties props = new Properties();
         // Assign host id
-        props.put("bootstrap.servers", "83.212.78.117:9092");
+        props.put("bootstrap.servers", host + ":9092");
         // Set acknowledgments for producer requests.
         props.put("acks", "all");
         // If the request fails, the producer can automatically retry,
@@ -61,10 +63,12 @@ public class CEPdata {
     private static void defaultArgs() {
         fileName = "data.txt";
         topicName = "CEPdata";
+        host = "83.212.78.117";
     }
 
     private static void givenArgs(String [] args){
         fileName = args[0];
         topicName = args[1];
+        host = args[2];
     }
 }
