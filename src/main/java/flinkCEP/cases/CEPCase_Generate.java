@@ -131,7 +131,7 @@ public class CEPCase_Generate {
         jobName = "Flink CEP Pattern Detection Automation";
         topicIn = "CEPdata";
         topicOut = "CEPout";
-        host = "83.212.78.117";
+        host = "localhost";
     }
 
     // Wanted values
