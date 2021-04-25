@@ -18,7 +18,7 @@ echo "START CEPDATA"
 echo ""
 
 # fileName, topicName, host
-java -jar dataKafka_final.jar 'data.txt' 'CEPdata' 'localhost'
+java -jar data_kafka.jar 'data.txt' 'CEPdata' 'localhost'
 
 echo "END CEPDATA"
 echo ""
@@ -30,7 +30,7 @@ echo ""
 
 cd flink
 # type, fileIn, fileOut, pattern, parallelism, contiguity, strategy, patternName, jobName, topicNameIn, topicNameOut, host
-./bin/flink run ./examples/flink_final.jar Kafka '-' '-' 'ab{1,3}(c|d)' 4 1 3 '-' 'Example' 'CEPdata' 'CEPout' 'localhost'
+./bin/flink run ./examples/flink_job.jar Kafka '-' '-' 'ab{1,3}(c|d)' 4 1 3 '-' 'Example' 'CEPdata' 'CEPout' 'localhost'
 
 echo "END FLINK JOB"
 echo ""
