@@ -30,7 +30,7 @@ The goal of the project is to create a generalized Complex Event Processing Oper
 3. Host IP (String)
 
 #### Command example (with jar)
-    java -jar data_kafka.jar 'data.txt' 'CEPdata' '1.2.3.4'
+    java -jar data_kafka.jar 'data.txt' 'CEPdata' 'localhost'
 
 
 ### Step 3 - Submit flink job & find results:
@@ -57,4 +57,4 @@ The user needs to enter 12 command-line arguments as follows:
 
 
 #### Command example (with jar, submitting job to a Flink cluster)
-    ./bin/flink run ./examples/flink_job.jar 'Kafka' '-' '-' 'ab{1,3}(c|d)' 4 1 3 '-' 'Example' 'CEPdata' 'CEPout' '1.2.3.4'
+    ./bin/flink run ./examples/flink_job.jar 'Kafka' '-' '-' 'ab{1,3}(c|d)' 4 1 3 '-' 'Example' 'CEPdata' 'CEPout' 'localhost'
