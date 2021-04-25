@@ -63,7 +63,7 @@ public class CEPdata {
     private static void defaultArgs() {
         fileName = "data.txt";
         topicName = "CEPdata";
-        host = "83.212.78.117";
+        host = "localhost";
     }
 
     private static void givenArgs(String [] args){
